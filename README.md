@@ -1,11 +1,5 @@
-# xArm7 Description (MJCF)
+# Bimanual xArm7
 
-> [!IMPORTANT]
-> Requires MuJoCo 2.3.3 or later.
-
-## Changelog
-
-See [CHANGELOG.md](./CHANGELOG.md) for a full history of changes.
 
 ## Overview
 
