@@ -1,0 +1,201 @@
+<mujoco model="dual_xarm7">
+  <compiler angle="radian" autolimits="true" meshdir="assets"/>
+
+  <option integrator="implicitfast"/>
+
+  <asset>
+    <material name="white" rgba="1 1 1 1"/>
+    <material name="gray" rgba="0.753 0.753 0.753 1"/>
+    <material name="black" rgba="0.149 0.149 0.149 1"/>
+
+    <mesh file="link_base.stl"/>
+    <mesh file="link1.stl"/>
+    <mesh file="link2.stl"/>
+    <mesh file="link3.stl"/>
+    <mesh file="link4.stl"/>
+    <mesh file="link5.stl"/>
+    <mesh file="link6.stl"/>
+    <mesh file="link7.stl"/>
+    <mesh file="end_tool.stl"/>
+    <mesh file="base_link.stl"/>
+    <mesh file="left_outer_knuckle.stl"/>
+    <mesh file="left_finger.stl"/>
+    <mesh file="left_inner_knuckle.stl"/>
+    <mesh file="right_outer_knuckle.stl"/>
+    <mesh file="right_finger.stl"/>
+    <mesh file="right_inner_knuckle.stl"/>
+  </asset>
+
+  <default>
+    <default class="xarm7">
+      <geom type="mesh" material="white"/>
+      <joint axis="0 0 1" armature="0.1" range="-6.28319 6.28319" frictionloss="1"/>
+      <general biastype="affine" ctrlrange="-6.28319 6.28319"/>
+      <default class="size1">
+        <joint damping="10"/>
+        <general gainprm="1500" biasprm="0 -1500 -150" forcerange="-50 50"/>
+      </default>
+      <default class="size2">
+        <joint damping="5"/>
+        <general gainprm="1000" biasprm="0 -1000 -100" forcerange="-30 30"/>
+      </default>
+      <default class="size3">
+        <joint damping="2"/>
+        <general gainprm="800" biasprm="0 -800 -80" forcerange="-20 20"/>
+      </default>
+      <default class="spring_link">
+        <joint range="0 0.85" stiffness="0.05" springref="2.62" damping="0.00125"/>
+      </default>
+      <default class="driver">
+        <joint range="0 0.85" armature="0.005" damping="0.1" solreflimit="0.005 1"/>
+      </default>
+      <default class="follower">
+        <joint range="0 0.85" solreflimit="0.005 1"/>
+      </default>
+      <default class="visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+      </default>
+      <default class="collision">
+        <geom type="mesh" group="3"/>
+        <default class="pad_box1">
+          <geom type="box" friction="0.7" solimp="0.95 0.99 0.001" solref="0.004 1" mass="0" priority="1" size="0.015 0.002 0.0095" rgba="0.0 0.1 0.7 1"/>
+        </default>
+        <default class="pad_box2">
+          <geom type="box" friction="0.6" solimp="0.95 0.99 0.001" solref="0.004 1" mass="0" priority="1" size="0.015 0.002 0.0095" rgba="0.0 0.5 0.5 1"/>
+        </default>
+      </default>
+      <site size="0.001" rgba="1 0 0 1" group="4"/>
+    </default>
+  </default>
+
+  <worldbody>
+    <light directional="true" diffuse=".8 .8 .8" specular=".2 .2 .2" pos="0 0 5" dir="0 0 -1"/>
+    
+    <body name="base_platform" pos="0 0 0">
+        <geom type="box" size="0.1 0.3 0.02" rgba="0.5 0.5 0.5 1" pos="0 0 -0.01"/>
+
+        <body name="L_link_base" pos="-0.1 0 0" euler="0 -0.785398 0" childclass="xarm7">
+            <inertial pos="-0.021131 -0.0016302 0.056488" quat="0.696843 0.20176 0.10388 0.680376" mass="0.88556" diaginertia="0.00382023 0.00335282 0.00167725"/>
+            <geom mesh="link_base"/>
+            <body name="L_link1" pos="0 0 0.267">
+                <joint name="L_joint1" class="size1"/>
+                <geom mesh="link1"/>
+                <body name="L_link2" quat="1 -1 0 0">
+                    <joint name="L_joint2" range="-2.059 2.0944" class="size1"/>
+                    <geom mesh="link2"/>
+                    <body name="L_link3" pos="0 -0.293 0" quat="1 1 0 0">
+                        <joint name="L_joint3" class="size2"/>
+                        <geom mesh="link3"/>
+                        <body name="L_link4" pos="0.0525 0 0" quat="1 1 0 0">
+                            <joint name="L_joint4" range="-0.19198 3.927" class="size2"/>
+                            <geom mesh="link4"/>
+                            <body name="L_link5" pos="0.0775 -0.3425 0" quat="1 1 0 0">
+                                <joint name="L_joint5" class="size2"/>
+                                <geom mesh="link5"/>
+                                <body name="L_link6" quat="1 1 0 0">
+                                    <joint name="L_joint6" range="-1.69297 3.14159" class="size3"/>
+                                    <geom mesh="link6"/>
+                                    <body name="L_link7" pos="0.076 0.097 0" quat="1 -1 0 0">
+                                        <joint name="L_joint7" class="size3"/>
+                                        <geom material="gray" mesh="end_tool"/>
+                                        <body name="L_xarm_gripper_base_link" quat="0 0 0 1">
+                                            <geom mesh="base_link"/>
+                                            <body name="L_left_outer_knuckle" pos="0 0.035 0.059098">
+                                                <joint name="L_left_driver_joint" axis="1 0 0" class="driver"/>
+                                                <geom material="black" mesh="left_outer_knuckle"/>
+                                                <body name="L_left_finger" pos="0 0.035465 0.042039">
+                                                    <joint name="L_left_finger_joint" axis="-1 0 0" class="follower"/>
+                                                    <geom class="visual" material="black" mesh="left_finger"/>
+                                                    <geom class="pad_box1" name="L_left_finger_pad_1" pos="0 -0.024003 0.032"/>
+                                                </body>
+                                            </body>
+                                            <body name="L_right_outer_knuckle" pos="0 -0.035 0.059098">
+                                                <joint name="L_right_driver_joint" axis="-1 0 0" class="driver"/>
+                                                <geom material="black" mesh="right_outer_knuckle"/>
+                                                <body name="L_right_finger" pos="0 -0.035465 0.042039">
+                                                    <joint name="L_right_finger_joint" axis="1 0 0" class="follower"/>
+                                                    <geom class="visual" material="black" mesh="right_finger"/>
+                                                    <geom class="pad_box1" name="L_right_finger_pad_1" pos="0 0.024003 0.032"/>
+                                                </body>
+                                            </body>
+                                        </body>
+                                    </body>
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+            </body>
+        </body>
+
+        <body name="R_link_base" pos="0.1 0 0" euler="0 0.785398 3.14159" childclass="xarm7">
+            <geom mesh="link_base"/>
+            <body name="R_link1" pos="0 0 0.267">
+                <joint name="R_joint1" class="size1"/>
+                <geom mesh="link1"/>
+                <body name="R_link2" quat="1 -1 0 0">
+                    <joint name="R_joint2" range="-2.059 2.0944" class="size1"/>
+                    <geom mesh="link2"/>
+                    <body name="R_link3" pos="0 -0.293 0" quat="1 1 0 0">
+                        <joint name="R_joint3" class="size2"/>
+                        <geom mesh="link3"/>
+                        <body name="R_link4" pos="0.0525 0 0" quat="1 1 0 0">
+                            <joint name="R_joint4" range="-0.19198 3.927" class="size2"/>
+                            <geom mesh="link4"/>
+                            <body name="R_link5" pos="0.0775 -0.3425 0" quat="1 1 0 0">
+                                <joint name="R_joint5" class="size2"/>
+                                <geom mesh="link5"/>
+                                <body name="R_link6" quat="1 1 0 0">
+                                    <joint name="R_joint6" range="-1.69297 3.14159" class="size3"/>
+                                    <geom mesh="link6"/>
+                                    <body name="R_link7" pos="0.076 0.097 0" quat="1 -1 0 0">
+                                        <joint name="R_joint7" class="size3"/>
+                                        <geom material="gray" mesh="end_tool"/>
+                                        <body name="R_xarm_gripper_base_link" quat="0 0 0 1">
+                                            <geom mesh="base_link"/>
+                                            <body name="R_left_outer_knuckle" pos="0 0.035 0.059098">
+                                                <joint name="R_left_driver_joint" axis="1 0 0" class="driver"/>
+                                                <geom material="black" mesh="left_outer_knuckle"/>
+                                                <body name="R_left_finger" pos="0 0.035465 0.042039">
+                                                    <joint name="R_left_finger_joint" axis="-1 0 0" class="follower"/>
+                                                    <geom class="visual" material="black" mesh="left_finger"/>
+                                                </body>
+                                            </body>
+                                            <body name="R_right_outer_knuckle" pos="0 -0.035 0.059098">
+                                                <joint name="R_right_driver_joint" axis="-1 0 0" class="driver"/>
+                                                <geom material="black" mesh="right_outer_knuckle"/>
+                                                <body name="R_right_finger" pos="0 -0.035465 0.042039">
+                                                    <joint name="R_right_finger_joint" axis="1 0 0" class="follower"/>
+                                                    <geom class="visual" material="black" mesh="right_finger"/>
+                                                </body>
+                                            </body>
+                                        </body>
+                                    </body>
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+            </body>
+        </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <general name="L_act1" joint="L_joint1" class="size1"/>
+    <general name="L_act2" joint="L_joint2" class="size1" ctrlrange="-2.059 2.0944"/>
+    <general name="L_act3" joint="L_joint3" class="size2"/>
+    <general name="L_act4" joint="L_joint4" class="size2" ctrlrange="-0.19198 3.927"/>
+    <general name="L_act5" joint="L_joint5" class="size2"/>
+    <general name="L_act6" joint="L_joint6" class="size3" ctrlrange="-1.69297 3.14159"/>
+    <general name="L_act7" joint="L_joint7" class="size3"/>
+    
+    <general name="R_act1" joint="R_joint1" class="size1"/>
+    <general name="R_act2" joint="R_joint2" class="size1" ctrlrange="-2.059 2.0944"/>
+    <general name="R_act3" joint="R_joint3" class="size2"/>
+    <general name="R_act4" joint="R_joint4" class="size2" ctrlrange="-0.19198 3.927"/>
+    <general name="R_act5" joint="R_joint5" class="size2"/>
+    <general name="R_act6" joint="R_joint6" class="size3" ctrlrange="-1.69297 3.14159"/>
+    <general name="R_act7" joint="R_joint7" class="size3"/>
+  </actuator>
+</mujoco>
